@@ -107,7 +107,7 @@ int st_lookup ( char * name ,int sp)
  */
 void printSymTab(FILE * listing)
 { int i,j;
-  for(j=0;j<=HighScope;j++)
+  for(j=0;j<=0;j++)
   {
     fprintf(listing,"Scope Variable Name  Location   Line Numbers\n");
     fprintf(listing,"----- -------------  --------   ------------\n");

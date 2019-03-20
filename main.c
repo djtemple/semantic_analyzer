@@ -9,7 +9,7 @@
 /* set NO_PARSE to TRUE to get a scanner-only compiler */
 #define NO_PARSE 0
 /* set NO_ANALYZE to TRUE to get a parser-only compiler */
-#define NO_ANALYZE 1
+#define NO_ANALYZE 0
 
 /* set NO_CODE to TRUE to get a compiler that does not
  * generate code
@@ -21,11 +21,11 @@
 #include "scan.h"
 //#else
 #include "parse.h"
-//#if !NO_ANALYZE
-//#include "analyze.h"
+#if !NO_ANALYZE
+#include "analyze.h"
 //#if !NO_CODE
 //#include "cgen.h"
-//#endif
+#endif
 //#endif
 //#endif
 
@@ -39,7 +39,7 @@ FILE * code;
 int EchoSource = TRUE;
 int TraceScan = TRUE;
 int TraceParse = TRUE;
-int TraceAnalyze = FALSE;
+int TraceAnalyze = TRUE;
 int TraceCode = FALSE;
 
 int Error = FALSE;
@@ -79,7 +79,9 @@ int main( int argc, char * argv[] )
     fprintf(listing,"\nSyntax tree:\n");
     printTree(syntaxTree);
   }
-/*
+
+  Error = 0;
+
 #if !NO_ANALYZE
   if (! Error)
   { if (TraceAnalyze) fprintf(listing,"\nBuilding Symbol Table...\n");
@@ -105,8 +107,7 @@ int main( int argc, char * argv[] )
   }
 #endif
 #endif
-#endif
-*/
+
   fclose(source);
   return 0;
 }
