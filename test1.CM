@@ -1,5 +1,9 @@
-/* This is a sample program in C- */
-void main (void) {
-output(x);
-}
+int x;
 
+void main (void){
+    x=1;
+    output(x);
+    output(1<2);
+    var=(1<2);
+    1+(2<2);
+}

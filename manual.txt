@@ -1,0 +1,47 @@
+C- Semantic Analyzer
+Class: CPSC 411
+Authors: Lee Erisman(10057615) and Dylan Temple (10131700)
+Group Members: 2
+
+Description: This program is used to do the semantic
+analysis of a syntax tree created by our previous
+assignment.
+
+To Run the Program:
+a. Download a3.zip and extract contents to your 
+desired location.
+
+b. Open Terminal/Command Prompt etc. and navigate
+to the now extracted "a3" folder
+using the "cd" command.
+
+*Note that stebs c and d are only required if the flex
+or bison files are changed.
+c. Compile the flex file using the command
+
+$ flex CM.flex
+
+d. Compile the bison file using the command
+
+$ bison -vd CM.y
+
+d. Now you may execute the makefile for the program 
+using the command
+
+$ make
+
+e. In order to execute on a text file use the 
+command where "test.CM" is a stand-in for whatever
+C- file you wish to analyze
+
+$ ./parser test.CM
+
+f. The parser will now perform a semantic analysis of the 
+code, and print out the relevant symbol table details and
+type checking results to the terminal
+
+Notes:
+This program fully implements the basic Assignment 3
+requirements and has demonstrated an ability to match the sample
+input/output that was provided as well as several other
+examples. This program does not implement the bonus part.
