@@ -13,6 +13,7 @@
 #include <string.h>
 #include "symtab.h"
 #include "globals.h"
+#include "analyze.h"
 
 
 
@@ -107,7 +108,7 @@ int st_lookup ( char * name ,int sp)
  */
 void printSymTab(FILE * listing)
 { int i,j;
-  for(j=0;j<=0;j++)
+  for(j=0;j<=scope_a;j++)
   {
     fprintf(listing,"Scope Variable Name  Location   Line Numbers\n");
     fprintf(listing,"----- -------------  --------   ------------\n");

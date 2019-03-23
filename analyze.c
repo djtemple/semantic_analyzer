@@ -11,12 +11,11 @@
 #include "analyze.h"
 
 
-static int scope_a = 0;
 
 /* counter for variable memory locations */
 static int location[MAX_SCOPE] = {0,0,0};
-
-static int No_change = 0; 
+int scope_a = 0;
+static int No_change = 0;
 /* Procedure traverse is a generic recursive 
  * syntax tree traversal routine:
  * it applies preProc in preorder and postProc 
@@ -55,13 +54,13 @@ static void insertNode( TreeNode * t)
   { case StmtK:
       switch (t->kind.stmt)
       { case CallK:
-          if (st_lookup(t->attr.name, 0) == -1)
+          if (st_lookup(t->attr.name, scope_a) == -1)
           /* not yet in table, so treat as new definition */
-            st_insert(t->attr.name,t->lineno, -1, 0 , t->isParameter);
+            st_insert(t->attr.name,t->lineno, -1, scope_a , t->isParameter);
           else
           /* already in table, so ignore location, 
              add line number of use only */ 
-            st_insert(t->attr.name,t->lineno,No_change, 0 , t->isParameter);
+            st_insert(t->attr.name,t->lineno,-1, scope_a , t->isParameter);
           break;
         default:
             printf("stmt ");
@@ -71,13 +70,13 @@ static void insertNode( TreeNode * t)
     case ExpK:
       switch (t->kind.exp)
       { case IdK:
-          if (st_lookup(t->attr.name, 0) == -1)
+          if (st_lookup(t->attr.name, scope_a) == -1)
           /* not yet in table, so treat as new definition */
-            st_insert(t->attr.name,t->lineno, -1, 0 , t->isParameter);
+            st_insert(t->attr.name,t->lineno, -1, scope_a , t->isParameter);
           else
           /* already in table, so ignore location, 
              add line number of use only */ 
-            st_insert(t->attr.name,t->lineno,No_change , 0, t->isParameter);
+            st_insert(t->attr.name,t->lineno,No_change , scope_a, t->isParameter);
           break;
         default:
           printf("expr ");
@@ -87,31 +86,34 @@ static void insertNode( TreeNode * t)
     case DecK:
       switch (t->kind.dec)
       { case VarK:
-          if (var_lookup(t->attr.name, 0) == NULL)
+          if (var_lookup(t->attr.name, scope_a) == NULL)
           /* not yet in table, so treat as new definition */
-            st_insert(t->attr.name,t->lineno, -1, 0 , t->isParameter);
+            st_insert(t->attr.name,t->lineno, -1, scope_a , t->isParameter);
           else
           /* already in table, so ignore location, 
              add line number of use only */ 
-            st_insert(t->attr.name,t->lineno,No_change , 0, t->isParameter);
+            st_insert(t->attr.name,t->lineno,No_change , scope_a, t->isParameter);
           break;
         case ArrayK:
-          if (st_lookup(t->attr.name, 0) == -1)
+          if (st_lookup(t->attr.name, scope_a) == -1)
           /* not yet in table, so treat as new definition */
-            st_insert(t->attr.name,t->lineno, -1, 0 , t->isParameter);
+            st_insert(t->attr.name,t->lineno, -1, scope_a , t->isParameter);
           else
           /* already in table, so ignore location, 
              add line number of use only */ 
-            st_insert(t->attr.name,t->lineno, No_change , 0, t->isParameter);
+            st_insert(t->attr.name,t->lineno, No_change , scope_a, t->isParameter);
           break;
         case FunK:
-          if (fun_lookup(t->attr.name, 0) == NULL)
-          /* not yet in table, so treat as new definition */
-            st_insert(t->attr.name,t->lineno, -1, 0 , t->isParameter);
+          if (fun_lookup(t->attr.name, 0) == NULL) {
+
+              /* not yet in table, so treat as new definition */
+              st_insert(t->attr.name, t->lineno, -1, 0, t->isParameter);
+              ++scope_a;
+          }
           else
           /* already in table, so ignore location, 
              add line number of use only */ 
-            st_insert(t->attr.name,t->lineno, No_change , 0, t->isParameter);
+            st_insert(t->attr.name,t->lineno, No_change , scope_a, t->isParameter);
           break;
         default:
           printf("declr ");

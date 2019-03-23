@@ -1,5 +1,5 @@
 int x;
-
+int y;
 int main (void){
     x=1;
     output(x);

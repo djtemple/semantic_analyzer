@@ -46,6 +46,7 @@ int Error = FALSE;
 
 int main( int argc, char * argv[] )
 { TreeNode * syntaxTree;
+  scope_a = 0;
   char pgm[120]; /* source code file name */
   if (argc != 2)
     { fprintf(stderr,"usage: %s <filename>\n",argv[0]);

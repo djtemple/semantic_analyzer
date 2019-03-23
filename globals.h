@@ -62,6 +62,7 @@ extern FILE* code; /* code text file for TM simulator */
 
 extern int lineno; /* source line number for listing */
 
+
 typedef enum {StmtK,ExpK,DecK} NodeKind;
 typedef enum {IfK,WhileK,CallK,ReturnK,CompoundK} StmtKind;
 typedef enum {OpK,ConstK,IdK,AssignK} ExpKind;
@@ -70,6 +71,7 @@ typedef enum {VarK,ArrayK,FunK} DecKind;
 typedef enum {Void,Integer,Boolean} ExpType;
 
 #define MAXCHILDREN 3
+
 
 typedef struct treeNode
    { struct treeNode * child[MAXCHILDREN];
@@ -136,5 +138,7 @@ extern int TraceAnalyze;
 extern int TraceCode;
 
 /* Error = TRUE prevents further passes if an error occurs */
-extern int Error; 
+extern int Error;
+
+
 #endif
