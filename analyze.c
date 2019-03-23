@@ -54,34 +54,7 @@ static void insertNode( TreeNode * t)
  switch (t->nodekind)
   { case StmtK:
       switch (t->kind.stmt)
-      { case IfK:
-          if (st_lookup(t->attr.name, 0) == -1)
-          /* not yet in table, so treat as new definition */
-            st_insert(t->attr.name,t->lineno, -1, 0 , t->isParameter);
-          else
-          /* already in table, so ignore location, 
-             add line number of use only */ 
-            st_insert(t->attr.name,t->lineno,No_change, 0 , t->isParameter);
-          break;
-        case WhileK:
-          if (st_lookup(t->attr.name, 0) == -1)
-          /* not yet in table, so treat as new definition */
-            st_insert(t->attr.name,t->lineno, -1, 0 , t->isParameter);
-          else
-          /* already in table, so ignore location, 
-             add line number of use only */ 
-            st_insert(t->attr.name,t->lineno,No_change, 0 , t->isParameter);
-          break;
-        case CallK:
-          if (st_lookup(t->attr.name, 0) == -1)
-          /* not yet in table, so treat as new definition */
-            st_insert(t->attr.name,t->lineno, -1, 0 , t->isParameter);
-          else
-          /* already in table, so ignore location, 
-             add line number of use only */ 
-            st_insert(t->attr.name,t->lineno,No_change, 0 , t->isParameter);
-          break;
-        case ReturnK:
+      { case CallK:
           if (st_lookup(t->attr.name, 0) == -1)
           /* not yet in table, so treat as new definition */
             st_insert(t->attr.name,t->lineno, -1, 0 , t->isParameter);
@@ -91,7 +64,7 @@ static void insertNode( TreeNode * t)
             st_insert(t->attr.name,t->lineno,No_change, 0 , t->isParameter);
           break;
         default:
-            printf("stmt");
+            printf("stmt ");
           break;
       }
       break;
@@ -107,14 +80,14 @@ static void insertNode( TreeNode * t)
             st_insert(t->attr.name,t->lineno,No_change , 0, t->isParameter);
           break;
         default:
-          printf("expr");
+          printf("expr ");
           break;
       }
       break;
     case DecK:
       switch (t->kind.dec)
       { case VarK:
-          if (var_lookup(t->attr.name, 0) == -1)
+          if (var_lookup(t->attr.name, 0) == NULL)
           /* not yet in table, so treat as new definition */
             st_insert(t->attr.name,t->lineno, -1, 0 , t->isParameter);
           else
@@ -141,7 +114,7 @@ static void insertNode( TreeNode * t)
             st_insert(t->attr.name,t->lineno, No_change , 0, t->isParameter);
           break;
         default:
-          printf("declr");
+          printf("declr ");
           break;
       }
       break;
@@ -184,7 +157,7 @@ static void checkNode(TreeNode * t)
             t->type = Integer;
           break;
         case AssignK:
-          if (t->child[0]->type != Integer)
+          if (t->child[1]->type != Integer)
             typeError(t->child[0],"assignment of non-integer value");
           break;
         case ConstK:
