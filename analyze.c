@@ -17,6 +17,7 @@ static int location[1000];
 int scope_a = 0;
 int num_scopes = 0;
 static int No_change = 0;
+int tempScope = 0;
 /* Procedure traverse is a generic recursive 
  * syntax tree traversal routine:
  * it applies preProc in preorder and postProc 
@@ -26,11 +27,25 @@ static void traverse( TreeNode * t,
                void (* preProc) (TreeNode *),
                void (* postProc) (TreeNode *) )
 { if (t != NULL)
-  { preProc(t);
+  {
+    if(t->nodekind == DecK && t->kind.dec == FunK){
+        ++num_scopes;
+          scope_a = num_scopes;
+
+    }
+    preProc(t);
+
     int i;
-    for (i=0; i < MAXCHILDREN; i++)
-        traverse(t->child[i],preProc,postProc);
-    
+
+    for (i=0; i < MAXCHILDREN; i++) {
+
+        traverse(t->child[i], preProc, postProc);
+
+    }
+      if(t->kind.dec == FunK){
+          scope_a = 0;
+
+      }
     postProc(t);
     traverse(t->sibling,preProc,postProc);
   }
@@ -125,8 +140,8 @@ static void insertNode( TreeNode * t)
               /* not yet in table, so treat as new definition */
               st_insert(t->attr.name, t->lineno, -1, 0, t->isParameter);
               location[num_scopes] = 0;
-              ++num_scopes;
-              scope_a = num_scopes;
+              //++num_scopes;
+              //scope_a = num_scopes;
           }
           else
           /* already in table, so ignore location, 

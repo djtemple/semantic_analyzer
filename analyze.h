@@ -13,6 +13,8 @@
 void buildSymtab(TreeNode *);
 
 extern int scope_a;
+extern int num_scopes;
+
 
 /* Procedure typeCheck performs type checking 
  * by a postorder syntax tree traversal
