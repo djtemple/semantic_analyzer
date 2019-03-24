@@ -1,7 +1,6 @@
 int x;
 
 void main(void){
-    int x;
     x = 9;
     output(x);
 

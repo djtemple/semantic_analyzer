@@ -13,8 +13,9 @@
 
 
 /* counter for variable memory locations */
-static int location[MAX_SCOPE] = {0,0,0};
+static int location[1000];
 int scope_a = 0;
+int num_scopes = 0;
 static int No_change = 0;
 /* Procedure traverse is a generic recursive 
  * syntax tree traversal routine:
@@ -44,6 +45,11 @@ static void nullProc(TreeNode * t)
   else return;
 }
 
+static void typeError(TreeNode * t, char * message)
+{ fprintf(listing,"Type error at line %d: %s\n",t->lineno,message);
+    Error = TRUE;
+}
+
 /* Procedure insertNode inserts 
  * identifiers stored in t into 
  * the symbol table 
@@ -63,41 +69,51 @@ static void insertNode( TreeNode * t)
             st_insert(t->attr.name,t->lineno,-1, scope_a , t->isParameter);
           break;
         default:
-            printf("stmt ");
           break;
       }
       break;
     case ExpK:
       switch (t->kind.exp)
       { case IdK:
-          if (st_lookup(t->attr.name, scope_a) == -1)
-          /* not yet in table, so treat as new definition */
-            st_insert(t->attr.name,t->lineno, -1, scope_a , t->isParameter);
-          else
-          /* already in table, so ignore location, 
-             add line number of use only */ 
-            st_insert(t->attr.name,t->lineno,No_change , scope_a, t->isParameter);
+          // check for t->attr.name in tree at 0 scope or current scope
+          // else add at old scope value
+          if (var_lookup(t->attr.name, scope_a) != NULL){
+              st_insert(t->attr.name,t->lineno, No_change , scope_a, t->isParameter);
+              break;
+          } else if (var_lookup(t->attr.name, 0) != NULL) {
+              st_insert(t->attr.name,t->lineno, No_change , 0, t->isParameter);
+              break;
+          }
+
+
           break;
         default:
-          printf("expr ");
           break;
       }
       break;
     case DecK:
       switch (t->kind.dec)
       { case VarK:
-          if (var_lookup(t->attr.name, scope_a) == NULL)
+
+          if (var_lookup(t->attr.name, scope_a) == NULL){
           /* not yet in table, so treat as new definition */
-            st_insert(t->attr.name,t->lineno, -1, scope_a , t->isParameter);
+          // location = numvars in scope
+            st_insert(t->attr.name,t->lineno, location[scope_a], scope_a , t->isParameter);
+            location[scope_a] = location[scope_a] + 1;
+          }
           else
           /* already in table, so ignore location, 
-             add line number of use only */ 
-            st_insert(t->attr.name,t->lineno,No_change , scope_a, t->isParameter);
+             add line number of use only */
+
+            st_insert(t->attr.name,t->lineno, No_change , scope_a, t->isParameter);
           break;
         case ArrayK:
-          if (st_lookup(t->attr.name, scope_a) == -1)
-          /* not yet in table, so treat as new definition */
-            st_insert(t->attr.name,t->lineno, -1, scope_a , t->isParameter);
+          if (st_lookup(t->attr.name, scope_a) == -1) {
+              /* not yet in table, so treat as new definition */
+
+              st_insert(t->attr.name, t->lineno, location[scope_a], scope_a, t->isParameter);
+              location[scope_a] = location[scope_a] + t->value;
+          }
           else
           /* already in table, so ignore location, 
              add line number of use only */ 
@@ -108,15 +124,16 @@ static void insertNode( TreeNode * t)
 
               /* not yet in table, so treat as new definition */
               st_insert(t->attr.name, t->lineno, -1, 0, t->isParameter);
-              ++scope_a;
+              location[num_scopes] = 0;
+              ++num_scopes;
+              scope_a = num_scopes;
           }
           else
           /* already in table, so ignore location, 
-             add line number of use only */ 
+             add line number of use only */
             st_insert(t->attr.name,t->lineno, No_change , scope_a, t->isParameter);
           break;
         default:
-          printf("declr ");
           break;
       }
       break;
@@ -136,10 +153,7 @@ void buildSymtab(TreeNode * syntaxTree)
   }
 }
 
-static void typeError(TreeNode * t, char * message)
-{ fprintf(listing,"Type error at line %d: %s\n",t->lineno,message);
-  Error = TRUE;
-}
+
 
 /* Procedure checkNode performs
  * type checking at a single tree node
