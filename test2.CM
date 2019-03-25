@@ -1,7 +1,6 @@
 int x;
-
 void main(void){
-    x = 9;
-    output(x);
+}
 
+void func(int){
 }

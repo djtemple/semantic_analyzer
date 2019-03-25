@@ -1,16 +1,9 @@
 int x;
-int y;
 int main (void){
-	x = 9;
-	return x;
+     func(2 < 4);
+     return (9 < 3);
+     
 }
-int l;
-
-void output(void){
-    int arr [9];
-    int x;
-    int dog;
-    dog = 3;
-    x = 0;
+void func(int k){
+     int j;
 }
-

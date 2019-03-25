@@ -75,6 +75,11 @@ static void insertNode( TreeNode * t)
   { case StmtK:
       switch (t->kind.stmt)
       { case CallK:
+          if(strcmp(t->attr.name, "output") == 0){
+              st_insert(t->attr.name,t->lineno, -1, 0 , t->isParameter);
+              break;
+          }
+
           if (st_lookup(t->attr.name, scope_a) == -1)
           /* not yet in table, so treat as new definition */
             st_insert(t->attr.name,t->lineno, -1, scope_a , t->isParameter);
@@ -210,7 +215,10 @@ static void checkNode(TreeNode * t)
             typeError(t->child[0],"while test is not Boolean");
           break;
         case CallK:
-          if (t->child[0]->type != Integer)
+          if(t->child[0] == NULL){
+
+          }
+           else if (t->child[0]->type != Integer)
             typeError(t->child[0],"parameter is a non-integer value");
           break;
         case ReturnK:
