@@ -2,5 +2,5 @@ int x;
 void main(void){
 }
 
-void func(int){
+void func(int r){
 }
